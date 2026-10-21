@@ -12,7 +12,7 @@ Open `index.html` in a modern browser. Search is powered by Wikipedia (Open Libr
 - Drag-and-drop ranking, plus up/down controls
 - Manual entries with image uploads
 - Poster grid and numbered list
-- Browser local storage, JSON import/export, print/PDF
+- Browser local storage, JSON import/export, JPG export, print/PDF
 - EN / KO toggle (default English, preference stored locally)
 
 Existing saved data from earlier versions is preserved under the same localStorage key.
