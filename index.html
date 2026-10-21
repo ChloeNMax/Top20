@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="#111827" name="theme-color"/>
-<title>TOP 20 Studio — Create Your Ranking</title>
+<title>TOP 20 — Create Your Ranking</title>
 <link href="css/style.css" rel="stylesheet"/>
 <script defer="" src="js/api.js"></script>
 <script defer="" src="js/render.js"></script>
@@ -13,7 +13,7 @@
 <script defer="" src="js/app.js"></script>
 </head>
 <body>
-<header class="topbar"><div class="brand"><span class="brand-mark">20<span>.</span></span><span>TOP20 <b>STUDIO</b></span></div><div class="top-actions"><span class="save-indicator" id="saveState">● Autosaved</span><div aria-label="Language" class="language-switch" role="group"><button aria-pressed="true" class="lang-option active" id="langEN" type="button">EN</button><span>/</span><button aria-pressed="false" class="lang-option" id="langKO" type="button">KO</button></div><button class="btn ghost" id="exportBtn" type="button">↧ Export JSON</button><button class="btn ghost" id="importBtn" type="button">↥ Import</button><input accept="application/json,.json" hidden="" id="importFile" type="file"/><button class="btn ghost" id="jpgBtn" type="button">🖼 Export JPG</button><button class="btn primary" id="printBtn" type="button">Print / PDF</button></div></header>
+<header class="topbar"><div class="brand"><span class="brand-mark">20<span>.</span></span><span>TOP20</span></div><div class="top-actions"><span class="save-indicator" id="saveState">● Autosaved</span><div aria-label="Language" class="language-switch" role="group"><button aria-pressed="true" class="lang-option active" id="langEN" type="button">EN</button><span>/</span><button aria-pressed="false" class="lang-option" id="langKO" type="button">KO</button></div><button class="btn ghost" id="exportBtn" type="button">↧ Export JSON</button><button class="btn ghost" id="importBtn" type="button">↥ Import</button><input accept="application/json,.json" hidden="" id="importFile" type="file"/><button class="btn ghost" id="jpgBtn" type="button">🖼 Export JPG</button><button class="btn primary" id="printBtn" type="button">Print / PDF</button></div></header>
 <main class="shell">
 <section class="hero"><div class="eyebrow">CREATE YOUR OWN RANKING</div><h1><span data-i18n="Your favorites.|당신의 취향을">Your favorites.</span><br/><em data-i18n="Your ranking.|순위로 만들어보세요.">Your ranking.</em></h1><p data-i18n="Search anything you love and build your own personal TOP 20, one pick at a time.|좋아하는 콘텐츠를 검색하고 나만의 TOP 20을 만들어보세요.">Search anything you love and build your own personal TOP 20, one pick at a time.</p></section>
 <div class="workspace">
@@ -39,7 +39,7 @@
 <div class="rank-editor" id="rankEditor"><div class="empty-rank">No items yet.<br/><span>Search or add something on the left!</span></div></div>
 <div class="output-heading"><div><div class="section-kicker">FINAL RESULT</div><h2 data-i18n="Your TOP 20|완성된 TOP 20">Your TOP 20</h2></div><span class="muted" data-i18n="Your picks appear here automatically.|추가한 항목이 아래에 자동으로 표시돼요.">Your picks appear here automatically.</span></div>
 <div class="export-area" id="exportArea"><h2 id="displayTitle">My TOP 20</h2><p hidden="" id="displayDesc"></p><div class="poster-grid" id="posterGrid"></div><div class="text-ranking"><h3 data-i18n="Full ranking|전체 순위">Full ranking</h3><ol id="rankingList"></ol></div></div>
-<footer class="preview-footer"><span>Made with TOP20 Studio</span><button class="text-button danger" id="clearBtn" type="button">Clear all</button></footer>
+<footer class="preview-footer"><span>Made with AJ</span><button class="text-button danger" id="clearBtn" type="button">Clear all</button></footer>
 </section>
 </div>
 </main>
