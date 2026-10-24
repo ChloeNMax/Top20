@@ -8,7 +8,7 @@ Upload `index.html`, `css/style.css`, and all files in `js/` to GitHub Pages, pr
 
 ## Features
 
-- Wikipedia-powered general title search; no RAWG game settings or API help text in the interface
+- Wikipedia-powered general title search
 - Add up to 20 picks and rearrange them by drag/drop or arrows
 - Manual title/image entries, local autosave, JSON export/import, print/PDF
 - Download JPG on desktop; iOS Share sheet where supported, otherwise an image preview with long-press Save to Photos fallback
