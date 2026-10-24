@@ -20,22 +20,12 @@ window.Top20API = (() => {
     const data = await getJson(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=25&fields=key,title,author_name,first_publish_year,cover_i`,signal);
     return (data.docs||[]).map(x=>({id:`openlibrary-${x.key}`,title:x.title||'제목 없음',image:x.cover_i?`https://covers.openlibrary.org/b/id/${x.cover_i}-M.jpg`:'',kind:'book',detail:[x.author_name?.[0],x.first_publish_year].filter(Boolean).join(' · ')}));
   }
-  async function games(query, signal) {
-    const key = (localStorage.getItem('top20_rawg_key')||'').trim();
-    if (!key) return wikipedia(query,'game',signal);
-    const data = await getJson(`https://api.rawg.io/api/games?key=${encodeURIComponent(key)}&search=${encodeURIComponent(query)}&page_size=25`,signal);
-    return (data.results||[]).map(x=>({id:`rawg-${x.id}`,title:x.name,image:x.background_image||'',kind:'game',detail:x.released?.slice(0,4)||''}));
-  }
   async function search(query,category,signal) {
     // Wikipedia supports anonymous browser CORS with origin=* and covers all categories.
-    // For books and games, prefer specialized services but fall back to Wikipedia.
+    // Use Wikipedia for general searches, with optional Open Library book lookup.
     if (category==='book') {
       try { const found=await books(query,signal); if(found.length) return found; } catch(e) {if(e.name==='AbortError')throw e;}
       return wikipedia(query,'book',signal);
-    }
-    if (category==='game') {
-      try { const found=await games(query,signal); if(found.length) return found; } catch(e) {if(e.name==='AbortError')throw e;}
-      return wikipedia(query,'game',signal);
     }
     return wikipedia(query,category,signal);
   }
