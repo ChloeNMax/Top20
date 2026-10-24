@@ -18,3 +18,7 @@ Upload `index.html`, `css/style.css`, and all files in `js/` to GitHub Pages, pr
 ## Known limits
 
 External Wikipedia images can be blocked from canvas rendering by cross-origin restrictions. If an image is missing from JPG export, consider manually uploading an image you can use. Safari and iOS versions vary; test the iPhone share/save flow on real devices. Data is stored per browser and is not synced between devices.
+
+## Supported by AI
+
+Used Chatgpt to make it smooth
