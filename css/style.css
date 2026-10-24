@@ -34,6 +34,9 @@ input:focus,textarea:focus,select:focus{border-color:#d4d4d8;box-shadow:0 0 0 3p
 .language-switch span{color:#777982;font-size:11px}
 .lang-option{background:transparent;color:#888b95;border:0;font-size:11px;font-weight:800;padding:4px 6px;border-radius:5px}
 .lang-option.active{background:#f4f4f5;color:#101114}
+.language-worldcup{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.worldcup-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:7px 10px;background:#ffffff;color:#111111;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap;}
+.worldcup-btn:hover{background:#dddddd;}
 @media print{body{background:#fff!important;color:#111!important}.export-area{background:#fff!important;color:#111!important}.poster-title,.text-ranking,.text-ranking li{color:#111!important}.text-ranking li::marker{color:#111!important}.poster-rank{background:#111!important}}
 
 /* v5: narrow-device layout fixes (keep existing black & white design) */
