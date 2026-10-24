@@ -1,18 +1,20 @@
-# TOP20 v1
+# TOP20 v2
 
-A black-and-white TOP 20 list creator with English / Korean language switching.
+A black-and-white, mobile-friendly TOP 20 ranking creator, with English / Korean switching.
 
-## Run
+## Run / deploy
 
-Open `index.html` in a modern browser. Search is powered by Wikipedia (Open Library for books when requested in earlier versions), and RAWG is an optional key-based game source. v3 searches everything by default, with no category dropdown. An internet connection is required for search.
+Upload `index.html`, `css/style.css`, and all files in `js/` to GitHub Pages, preserving their relative paths. `html2canvas` loads from a public CDN; an internet connection is required for search and JPG export.
 
 ## Features
 
-- Search items and add up to 20 picks
-- Drag-and-drop ranking, plus up/down controls
-- Manual entries with image uploads
-- Poster grid and numbered list
-- Browser local storage, JSON import/export, JPG export, print/PDF
-- EN / KO toggle (default English, preference stored locally)
+- Wikipedia-powered general title search; no RAWG game settings or API help text in the interface
+- Add up to 20 picks and rearrange them by drag/drop or arrows
+- Manual title/image entries, local autosave, JSON export/import, print/PDF
+- Download JPG on desktop; iOS Share sheet where supported, otherwise an image preview with long-press Save to Photos fallback
+- Fixed five-column JPG export regardless of narrow mobile screen; responsive mobile editor layout
+- EN / KO toggle
 
-Existing saved data from earlier versions is preserved under the same localStorage key.
+## Known limits
+
+External Wikipedia images can be blocked from canvas rendering by cross-origin restrictions. If an image is missing from JPG export, consider manually uploading an image you can use. Safari and iOS versions vary; test the iPhone share/save flow on real devices. Data is stored per browser and is not synced between devices.
