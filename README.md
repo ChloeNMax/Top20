@@ -22,19 +22,3 @@ Choose **Anime** to search AniList using its public GraphQL API. The **All** tab
 ## Supported by AI
 
 Used Chatgpt to make it smooth
-
-
----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-# TOP RANKING – Jikan replacement patch
-
-Anime search uses the Jikan API (MyAnimeList data), replacing AniList. All-mode Wikipedia/TVmaze search is unchanged.
-
-**GitHub replacement files:** `js/api.js`, `js/app.js`. Other website files can stay as-is.
-
-**Cloudflare:** paste `cloudflare-worker.js` into your existing Worker and deploy; the Worker now allows `images.myanimelist.net` and sends CORS headers on errors. Only Jikan/MyAnimeList poster URLs use the Worker for JPG export.
-
-**Existing lists:** Previously saved `anilist-*` items keep their old image URLs, so for those posters you will need to remove and re-add the entries from the new Anime search (or back up the list with Export JSON first). Existing items and localStorage are not erased by the update.
-
-**Verification:** Jikan API connectivity is independently documented; the image CDN allowing Worker downloads is **not** verified here. If you receive 502, check the Worker URL with a `?url=` parameter. Do not treat this patch as proven to fix JPG downloads on all devices until tested.
