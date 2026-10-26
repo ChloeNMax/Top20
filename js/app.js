@@ -54,6 +54,53 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
    $('jpgDialog').hidden=false;
    document.body.classList.add('jpg-dialog-open');
  }
+ // Make remote posters canvas-safe before exporting. Browsers may display an image
+ // while denying html2canvas access to its pixels (CORS).
+ function blobAsDataURL(blob){
+   return new Promise((resolve,reject)=>{
+     const reader=new FileReader();
+     reader.onload=()=>resolve(String(reader.result));
+     reader.onerror=()=>reject(new Error('Unable to read image data'));
+     reader.readAsDataURL(blob);
+   });
+ }
+ async function fetchPosterForCanvas(original){
+   if(original.startsWith('data:image/'))return original;
+   const proxy=`https://wsrv.nl/?url=${encodeURIComponent(original)}&w=420&output=jpg`;
+   for(const url of [original,proxy]){
+     try{
+       const response=await fetch(url,{mode:'cors',credentials:'omit'});
+       if(!response.ok)continue;
+       const blob=await response.blob();
+       if(!blob.type.startsWith('image/') || !blob.size)continue;
+       return await blobAsDataURL(blob);
+     }catch(error){/* Try the CORS-enabled image proxy. */}
+   }
+   throw new Error('Unable to load one or more poster images for JPG export');
+ }
+ async function prepareExportPosters(){
+   const images=Array.from($('posterGrid').querySelectorAll('.poster-image img'));
+   const originalSrcs=images.map(img=>img.getAttribute('src'));
+   const dataURLs=new Array(images.length);
+   let nextIndex=0;
+   // Limit simultaneous image requests on phones and long rankings.
+   async function worker(){
+     while(nextIndex<images.length){
+       const i=nextIndex++;
+       dataURLs[i]=await fetchPosterForCanvas(originalSrcs[i]);
+     }
+   }
+   await Promise.all(Array.from({length:Math.min(4,images.length)},worker));
+   // Only alter the live images after every conversion succeeds.
+   const restore=()=>images.forEach((img,i)=>{img.src=originalSrcs[i]});
+   try{
+     await Promise.all(images.map(async(img,i)=>{
+       img.src=dataURLs[i];
+       try{await img.decode()}catch(e){throw new Error('Unable to decode a poster image')}
+     }));
+   }catch(error){restore();throw error;}
+   return restore;
+ }
  async function exportAsJPG(){
    const target=$('exportArea');
    if(typeof window.html2canvas!=='function'){
@@ -61,7 +108,9 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
      return;
    }
    const btn=$('jpgBtn');btn.disabled=true;btn.textContent=msg('Rendering…','이미지 생성 중…');
+   let restorePosters=()=>{};
    try{
+     restorePosters=await prepareExportPosters();
      // Use a stable desktop-sized export in the cloned document, regardless of phone width.
      // Keep canvas within practical iOS Safari memory limits.
      await Promise.all(Array.from(target.querySelectorAll('img')).map(img=>{
@@ -98,8 +147,8 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
        toast(msg('JPG downloaded.','JPG 파일을 저장했어요.'));
      }
    }catch(err){console.error('JPG export failed',err);
-     toast(msg('JPG export failed. Some external images may prevent capture.','JPG 저장에 실패했어요. 일부 외부 이미지가 캡처를 막을 수 있어요.'));
-   }finally{btn.disabled=false;btn.textContent=msg('🖼 Export JPG','🖼 JPG 저장');}
+     toast(msg('JPG export failed because some posters could not be loaded for capture. Please try again.','일부 포스터를 JPG용으로 불러오지 못해 저장이 중단됐어요. 다시 시도해 주세요.'));
+   }finally{restorePosters();btn.disabled=false;btn.textContent=msg('🖼 Export JPG','🖼 JPG 저장');}
  }
  $('jpgBtn').addEventListener('click',exportAsJPG);
  $('printBtn').addEventListener('click',()=>window.print());
