@@ -74,3 +74,9 @@ html,body{width:100%;max-width:100%;overflow-x:clip}
 .language-worldcup{display:flex;flex-direction:column;align-items:center;gap:6px}
 .worldcup-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;padding:7px 10px;background:#fff;color:#111;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap}
 .worldcup-btn:hover{background:#ddd}
+
+/* Search mode selector — inherits the TOP RANKING monochrome theme. */
+.search-modes{display:inline-flex;align-items:center;gap:5px;margin:0 0 12px;padding:4px;border:1px solid #36373c;border-radius:10px;background:#17181c;max-width:100%}
+.search-mode{border:0;border-radius:7px;padding:8px 17px;background:transparent;color:#a9a9ad;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+.search-mode.active{background:#f5f5f5;color:#17181c}
+.search-mode:focus-visible{outline:2px solid #f5f5f5;outline-offset:2px}
