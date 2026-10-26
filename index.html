@@ -5,7 +5,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="#111827" name="theme-color"/>
-<title>TOP 20 — Create Your Ranking</title>
+<title>TOP RANKING — Create Your Ranking</title>
 <link href="css/style.css" rel="stylesheet"/>
 <script defer="" src="js/api.js"></script>
 <script defer="" src="js/render.js"></script>
@@ -13,14 +13,13 @@
 <script defer="" src="js/app.js"></script>
 </head>
 <body>
-<header class="topbar"><div class="brand"><span class="brand-mark">20<span>.</span></span><span>TOP20</span></div><div class="top-actions"><span class="save-indicator" id="saveState">● Autosaved</span><div class="language-worldcup"><div class="language-switch" role="group" aria-label="Language"><button id="langEN" class="lang-option active" type="button">EN</button><span>/</span><button id="langKO" class="lang-option" type="button">KO</button></div><a href="https://chloenmax.github.io/Top20-Worldcup/" class="btn worldcup-btn" target="_blank" rel="noopener noreferrer" data-i18n="🏆 World Cup|🏆 월드컵">🏆 World Cup</a>
-</div><button class="btn ghost" id="exportBtn" type="button">↧ Export JSON</button><button class="btn ghost" id="importBtn" type="button">↥ Import</button><input accept="application/json,.json" hidden="" id="importFile" type="file"/><button class="btn ghost" id="jpgBtn" type="button">🖼 Export JPG</button><button class="btn primary" id="printBtn" type="button">Print / PDF</button></div></header>
+<header class="topbar"><div class="brand"><span class="brand-mark">R<span>.</span></span><span>TOP RANKING</span></div><div class="top-actions"><span class="save-indicator" id="saveState">● Autosaved</span><div class="language-worldcup"><div aria-label="Language" class="language-switch" role="group"><button aria-pressed="true" class="lang-option active" id="langEN" type="button">EN</button><span>/</span><button aria-pressed="false" class="lang-option" id="langKO" type="button">KO</button></div><a href="https://chloenmax.github.io/Top20-Worldcup/" class="btn worldcup-btn" target="_blank" rel="noopener noreferrer" data-i18n="🏆 World Cup|🏆 월드컵">🏆 World Cup</a></div><button class="btn ghost" id="exportBtn" type="button">↧ Export JSON</button><button class="btn ghost" id="importBtn" type="button">↥ Import</button><input accept="application/json,.json" hidden="" id="importFile" type="file"/><button class="btn ghost" id="jpgBtn" type="button">🖼 Export JPG</button><button class="btn primary" id="printBtn" type="button">Print / PDF</button></div></header>
 <main class="shell">
-<section class="hero"><div class="eyebrow" data-i18n="CREATE YOUR OWN RANKING|나만의 순위 만들기">CREATE YOUR OWN RANKING</div><h1><span data-i18n="Your favorites.|당신의 취향을">Your favorites.</span><br/><em data-i18n="Your ranking.|순위로 만들어보세요.">Your ranking.</em></h1><p data-i18n="Search anything you love and build your own personal TOP 20, one pick at a time.|좋아하는 콘텐츠를 검색하고 나만의 TOP 20을 만들어보세요.">Search anything you love and build your own personal TOP 20, one pick at a time.</p></section>
+<section class="hero"><div class="eyebrow" data-i18n="CREATE YOUR OWN RANKING|나만의 순위 만들기">CREATE YOUR OWN RANKING</div><h1><span data-i18n="Your favorites.|당신의 취향을">Your favorites.</span><br/><em data-i18n="Your ranking.|순위로 만들어보세요.">Your ranking.</em></h1><p data-i18n="Search anything you love and build your personal ranking, one pick at a time.|좋아하는 콘텐츠를 검색하고 나만의 랭킹을 만들어보세요.">Search anything you love and build your personal ranking, one pick at a time.</p></section>
 <div class="workspace">
 <aside class="editor panel">
 <div class="section-kicker" data-i18n="01 / CREATE|01 / 만들기">01 / CREATE</div><h2 data-i18n="Create a list|리스트 만들기">Create a list</h2>
-<label class="field-label" data-i18n="List title|리스트 제목" for="listTitle">List title</label><input id="listTitle" maxlength="100" placeholder="e.g. My all-time TOP 20" type="text" value="My TOP 20"/>
+<label class="field-label" data-i18n="List title|리스트 제목" for="listTitle">List title</label><input id="listTitle" maxlength="100" placeholder="e.g. My all-time TOP RANKING" type="text" value="My Ranking"/>
 <label class="field-label" for="listDescription"><span data-i18n="Description|설명">Description</span><span class="muted" data-i18n="(optional)|(선택)">(optional)</span></label><textarea id="listDescription" maxlength="300" placeholder="Add a short description of your ranking." rows="2"></textarea>
 <div class="section-rule"></div>
 <div class="section-kicker" data-i18n="02 / DISCOVER|02 / 검색">02 / DISCOVER</div><h2 data-i18n="Search content|콘텐츠 검색">Search content</h2>
@@ -29,22 +28,23 @@
 <div class="section-rule"></div>
 <h3 data-i18n="Add manually|직접 추가하기">Add manually</h3><p class="subnote" data-i18n="Add anything you cannot find in search, with an optional image.|검색에서 찾을 수 없는 항목을 직접 추가할 수 있어요. 이미지 첨부는 선택 사항입니다.">Add anything you cannot find in search, with an optional image.</p>
 <form class="manual-form" id="manualForm"><label class="field-label" data-i18n="Name|이름" for="manualTitle">Name</label><input id="manualTitle" maxlength="120" placeholder="Item name" required=""/><label class="field-label" for="manualImage"><span data-i18n="Upload image|이미지 업로드">Upload image</span><span class="muted" data-i18n="(optional)|(선택)">(optional)</span></label><input accept="image/png,image/jpeg,image/webp,image/gif" id="manualImage" type="file"/><button class="btn outline fill" data-i18n="＋ Add to my list|＋ 내 리스트에 추가" type="submit">＋ Add to my list</button></form>
+
 </aside>
 <section class="preview panel" id="preview">
-<div class="preview-header"><div><div class="section-kicker" data-i18n="03 / YOUR RANKING|03 / 나의 순위">03 / YOUR RANKING</div><h2 id="previewTitle">My TOP 20</h2><p class="muted" hidden="" id="previewDesc"></p></div><div class="count-pill"><strong id="itemCount">0</strong> / 100</div></div>
+<div class="preview-header"><div><div class="section-kicker" data-i18n="03 / YOUR RANKING|03 / 나의 순위">03 / YOUR RANKING</div><h2 id="previewTitle">My Ranking</h2><p class="muted" hidden="" id="previewDesc"></p></div><div class="count-pill"><strong id="itemCount">0</strong> / 100</div></div>
 <div class="progress-track"><div id="progressBar"></div></div>
 <div class="preview-toolbar"><h3 data-i18n="Edit ranking|순위 편집">Edit ranking</h3><span class="muted" data-i18n="☰ Drag or use ↑ ↓ to reorder|☰ 드래그 또는 ↑ ↓ 버튼으로 이동">☰ Drag or use ↑ ↓ to reorder</span></div>
 <div class="rank-editor" id="rankEditor"><div class="empty-rank">No items yet.<br/><span>Search or add something on the left!</span></div></div>
-<div class="output-heading"><div><div class="section-kicker" data-i18n="FINAL RESULT|최종 결과">FINAL RESULT</div><h2 data-i18n="Your TOP 20|완성된 TOP 20">Your TOP 20</h2></div><span class="muted" data-i18n="Your picks appear here automatically.|추가한 항목이 아래에 자동으로 표시돼요.">Your picks appear here automatically.</span></div>
-<div class="export-area" id="exportArea"><h2 id="displayTitle">My TOP 20</h2><p hidden="" id="displayDesc"></p><div class="poster-grid" id="posterGrid"></div><div class="text-ranking"><h3 data-i18n="Full ranking|전체 순위">Full ranking</h3><ol id="rankingList"></ol></div></div>
+<div class="output-heading"><div><div class="section-kicker" data-i18n="FINAL RESULT|최종 결과">FINAL RESULT</div><h2 data-i18n="Your Ranking|완성된 랭킹">Your Ranking</h2></div><span class="muted" data-i18n="Your picks appear here automatically.|추가한 항목이 아래에 자동으로 표시돼요.">Your picks appear here automatically.</span></div>
+<div class="export-area" id="exportArea"><h2 id="displayTitle">My Ranking</h2><p hidden="" id="displayDesc"></p><div class="poster-grid" id="posterGrid"></div><div class="text-ranking"><h3 data-i18n="Full ranking|전체 순위">Full ranking</h3><ol id="rankingList"></ol></div></div>
 <footer class="preview-footer"><span>Made with AJ</span><button class="text-button danger" id="clearBtn" type="button">Clear all</button></footer>
 </section>
 </div>
 </main>
 <div aria-live="polite" id="toast" role="status"></div>
 <div class="jpg-dialog" id="jpgDialog" hidden role="dialog" aria-modal="true" aria-labelledby="jpgDialogTitle">
-<div class="jpg-dialog-content"><div class="jpg-dialog-header"><h2 id="jpgDialogTitle">Save your TOP 20</h2><button class="icon-button" id="jpgClose" type="button" aria-label="Close">✕</button></div>
-<p id="jpgHelp">On iPhone, touch and hold the image, then choose Save to Photos.</p><img id="jpgPreview" alt="Your TOP 20 JPG preview"/><a class="btn primary jpg-download" id="jpgDownload" download="my-top-20.jpg">Download JPG</a></div>
+<div class="jpg-dialog-content"><div class="jpg-dialog-header"><h2 id="jpgDialogTitle">Save your Ranking</h2><button class="icon-button" id="jpgClose" type="button" aria-label="Close">✕</button></div>
+<p id="jpgHelp">On iPhone, touch and hold the image, then choose Save to Photos.</p><img id="jpgPreview" alt="Your Ranking JPG preview"/><a class="btn primary jpg-download" id="jpgDownload" download="my-ranking.jpg">Download JPG</a></div>
 </div>
 </body>
 </html>
