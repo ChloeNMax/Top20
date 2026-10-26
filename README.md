@@ -1,4 +1,4 @@
-# TOP RANKING
+# TOP RANKING - V2
 
 A black-and-white, bilingual (EN/KO) ranking maker. Add and reorder any number of items up to **100**.
 
@@ -13,8 +13,12 @@ A black-and-white, bilingual (EN/KO) ranking maker. Add and reorder any number o
 ## GitHub Pages
 Upload `index.html`, `css/`, and `js/` to the repository root. Deploy `main` / `(root)` in Settings → Pages.
 
+**Note:** Exporting up to 100 images as one JPG may exceed mobile browser canvas/memory limits. Browser storage space can also be exhausted by large uploaded images.
+
+### Anime search
+
+Choose **Anime** to search AniList using its public GraphQL API. The **All** tab preserves Wikipedia search and TVmaze TV-image fallback. Both modes produce the same saved item data structure. No API key required.
+
 ## Supported by AI
 
 Used Chatgpt to make it smooth
-
-**Note:** Exporting up to 100 images as one JPG may exceed mobile browser canvas/memory limits. Browser storage space can also be exhausted by large uploaded images.
