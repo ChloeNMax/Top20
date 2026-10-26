@@ -112,10 +112,10 @@ window.RankingAPI = (() => {
     }));
   }
 
-  // Anime mode: Jikan (MyAnimeList), instead of AniList.
-  // Official API reference: https://docs.api.jikan.moe/
+  // Anime mode: Tenrai (MyAnimeList catalogue).
+  // Reference: https://api.tenrai.org/documentation
   async function anime(query, signal) {
-    const url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=25`;
+    const url = `https://api.tenrai.org/v1/anime?q=${encodeURIComponent(query)}&limit=25`;
     const payload = await getJson(url, signal);
     return (payload.data || []).map(entry => ({
       id: `jikan-${entry.mal_id}`,
