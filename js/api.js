@@ -112,7 +112,45 @@ window.RankingAPI = (() => {
     }));
   }
 
+  // Dedicated anime results from AniList. Does not change Wikipedia/TVmaze search.
+  async function anime(query, signal) {
+    const graphQL = `query ($search: String!) {
+      Page(page: 1, perPage: 25) {
+        media(search: $search, type: ANIME) {
+          id
+          title { english romaji native }
+          coverImage { extraLarge large medium }
+          format
+          seasonYear
+        }
+      }
+    }`;
+    let response;
+    try {
+      response = await fetch('https://graphql.anilist.co', {
+        method: 'POST', signal,
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ query: graphQL, variables: { search: query } })
+      });
+    } catch (error) {
+      if (error.name === 'AbortError') throw error;
+      throw new Error('Unable to connect to AniList. / AniList에 연결하지 못했습니다.');
+    }
+    if (response.status === 429) throw new Error('AniList rate limit reached. Try again shortly. / 잠시 뒤 다시 검색해 주세요.');
+    if (!response.ok) throw new Error(`AniList API error (HTTP ${response.status})`);
+    const payload = await response.json();
+    if (payload.errors?.length) throw new Error(payload.errors[0].message || 'AniList search failed.');
+    return (payload.data?.Page?.media || []).map(entry => ({
+      id: `anilist-${entry.id}`,
+      title: entry.title?.english || entry.title?.romaji || entry.title?.native || 'Untitled',
+      image: entry.coverImage?.extraLarge || entry.coverImage?.large || entry.coverImage?.medium || '',
+      kind: 'anime',
+      detail: [entry.title?.english && entry.title?.romaji !== entry.title.english ? entry.title.romaji : '', entry.format?.replaceAll('_',' '), entry.seasonYear].filter(Boolean).join(' · ')
+    }));
+  }
+
   async function search(query, category, signal) {
+    if (category === 'anime') return anime(query, signal);
     if (category === 'book') {
       try {
         const found = await books(query, signal);
