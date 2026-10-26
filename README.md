@@ -1,24 +1,20 @@
-# TOP20 v3
+# TOP RANKING
 
-A black-and-white, mobile-friendly TOP 20 ranking creator, with English / Korean switching.
-
-## Run / deploy
-
-Upload `index.html`, `css/style.css`, and all files in `js/` to GitHub Pages, preserving their relative paths. `html2canvas` loads from a public CDN; an internet connection is required for search and JPG export.
+A black-and-white, bilingual (EN/KO) ranking maker. Add and reorder any number of items up to **100**.
 
 ## Features
+- Search existing media via Wikipedia / Open Library or add titles and images manually
+- Drag to reorder, edit list title/description, export/import JSON
+- Export JPG, including mobile iOS preview fallback, and print/PDF
+- Automatically saves to `localStorage` key `top_ranking_v1`
+- Migrates existing browser data from `top20_studio_v1` if the new key does not exist; the legacy key is not deleted
+- Keeps the existing World Cup link as navigation only; World Cup is a separate application
 
-- Wikipedia-powered general title search
-- Add up to 100 picks and rearrange them by drag/drop or arrows
-- Manual title/image entries, local autosave, JSON export/import, print/PDF
-- Download JPG on desktop; iOS Share sheet where supported, otherwise an image preview with long-press Save to Photos fallback
-- Fixed five-column JPG export regardless of narrow mobile screen; responsive mobile editor layout
-- EN / KO toggle
-
-## Known limits
-
-External Wikipedia images can be blocked from canvas rendering by cross-origin restrictions. If an image is missing from JPG export, consider manually uploading an image you can use. Safari and iOS versions vary; test the iPhone share/save flow on real devices. Data is stored per browser and is not synced between devices.
+## GitHub Pages
+Upload `index.html`, `css/`, and `js/` to the repository root. Deploy `main` / `(root)` in Settings → Pages.
 
 ## Supported by AI
 
 Used Chatgpt to make it smooth
+
+**Note:** Exporting up to 100 images as one JPG may exceed mobile browser canvas/memory limits. Browser storage space can also be exhausted by large uploaded images.
