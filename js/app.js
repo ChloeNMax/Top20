@@ -64,20 +64,43 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
      reader.readAsDataURL(blob);
    });
  }
- async function fetchPosterForCanvas(original){
-   if(original.startsWith('data:image/'))return original;
-   const proxy=`https://wsrv.nl/?url=${encodeURIComponent(original)}&w=420&output=jpg`;
-   for(const url of [original,proxy]){
-     try{
-       const response=await fetch(url,{mode:'cors',credentials:'omit'});
-       if(!response.ok)continue;
-       const blob=await response.blob();
-       if(!blob.type.startsWith('image/') || !blob.size)continue;
-       return await blobAsDataURL(blob);
-     }catch(error){/* Try the CORS-enabled image proxy. */}
-   }
-   throw new Error('Unable to load one or more poster images for JPG export');
- }
+ async function fetchPosterForCanvas(original) {
+  if (original.startsWith("data:image/")) {
+    return original;
+  }
+
+  const WORKER_URL =
+    "https://topranking-image-proxy.iljongan.workers.dev";
+
+  const host = new URL(original).hostname;
+
+  const isAniList =
+    /^s[1-4]\.anilist\.co$/.test(host) ||
+    host === "img.anili.st";
+
+  const imageURL = isAniList
+    ? `${WORKER_URL}?url=${encodeURIComponent(original)}`
+    : original;
+
+  const response = await fetch(imageURL, {
+    mode: "cors",
+    credentials: "omit"
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Poster unavailable: ${response.status} (${host})`
+    );
+  }
+
+  const blob = await response.blob();
+
+  if (!blob.type.startsWith("image/")) {
+    throw new Error("Invalid image response");
+  }
+
+  return await blobAsDataURL(blob);
+}
  async function prepareExportPosters(){
   const images = Array.from(
     $('posterGrid').querySelectorAll('.poster-image img')
