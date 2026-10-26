@@ -65,41 +65,55 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
    });
  }
  async function fetchPosterForCanvas(original) {
-  if (original.startsWith("data:image/")) {
+  if (original.startsWith('data:image/')) {
     return original;
   }
 
   const WORKER_URL =
-    "https://topranking-image-proxy.iljongan.workers.dev";
+    'https://topranking-image-proxy.iljongan.workers.dev';
 
-  const host = new URL(original).hostname;
+  const parsed = new URL(original);
 
   const isAniList =
-    /^s[1-4]\.anilist\.co$/.test(host) ||
-    host === "img.anili.st";
+    /^s[1-4]\.anilist\.co$/.test(parsed.hostname) ||
+    parsed.hostname === 'img.anili.st';
 
-  const imageURL = isAniList
-    ? `${WORKER_URL}?url=${encodeURIComponent(original)}`
-    : original;
+  const urls = isAniList
+    ? [
+        `${WORKER_URL}?url=${encodeURIComponent(original)}`
+      ]
+    : [
+        original,
+        `https://wsrv.nl/?url=${encodeURIComponent(original)}&w=420&output=jpg`
+      ];
 
-  const response = await fetch(imageURL, {
-    mode: "cors",
-    credentials: "omit"
-  });
+  for (const url of urls) {
+    try {
+      const response = await fetch(url, {
+        mode: 'cors',
+        credentials: 'omit'
+      });
 
-  if (!response.ok) {
-    throw new Error(
-      `Poster unavailable: ${response.status} (${host})`
-    );
+      if (!response.ok) {
+        console.warn('Image HTTP error:', response.status, url);
+        continue;
+      }
+
+      const blob = await response.blob();
+
+      if (!blob.type.startsWith('image/') || !blob.size) {
+        console.warn('Invalid image response:', url);
+        continue;
+      }
+
+      return await blobAsDataURL(blob);
+
+    } catch (error) {
+      console.error('Image loading error:', url, error);
+    }
   }
 
-  const blob = await response.blob();
-
-  if (!blob.type.startsWith("image/")) {
-    throw new Error("Invalid image response");
-  }
-
-  return await blobAsDataURL(blob);
+  throw new Error(`Unable to load poster: ${original}`);
 }
  async function prepareExportPosters(){
   const images = Array.from(
