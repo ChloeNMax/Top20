@@ -64,96 +64,51 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
      reader.readAsDataURL(blob);
    });
  }
- async function fetchPosterForCanvas(original) {
-  if (original.startsWith('data:image/')) {
-    return original;
-  }
+ async function fetchPosterForCanvas(original){
+   if(original.startsWith('data:image/'))return original;
+   const worker='https://topranking-image-proxy.iljongan.workers.dev/';
+   const parsed=new URL(original);
+   const isMalImage=parsed.protocol==='https:' && parsed.hostname==='images.myanimelist.net';
+   const urls=isMalImage
+     ? [`${worker}?url=${encodeURIComponent(original)}`]
+     : [original,`https://wsrv.nl/?url=${encodeURIComponent(original)}&w=420&output=jpg`];
+   let lastError='';
+   for(const url of urls){
+     try{
+       const response=await fetch(url,{mode:'cors',credentials:'omit'});
+       if(!response.ok){lastError=`HTTP ${response.status}`;continue;}
+       const blob=await response.blob();
+       if(!blob.type.startsWith('image/') || !blob.size){lastError='Invalid image';continue;}
+       return await blobAsDataURL(blob);
+     }catch(error){lastError=String(error);}
+   }
+   console.error('JPG poster image conversion failed:',parsed.hostname,lastError);
+   throw new Error(`Unable to export poster from ${parsed.hostname}: ${lastError}`);
+ }
 
-  const WORKER_URL =
-    'https://topranking-image-proxy.iljongan.workers.dev';
-
-  const parsed = new URL(original);
-
-  const isAniList =
-    /^s[1-4]\.anilist\.co$/.test(parsed.hostname) ||
-    parsed.hostname === 'img.anili.st';
-
-  const urls = isAniList
-    ? [
-        `${WORKER_URL}?url=${encodeURIComponent(original)}`
-      ]
-    : [
-        original,
-        `https://wsrv.nl/?url=${encodeURIComponent(original)}&w=420&output=jpg`
-      ];
-
-  for (const url of urls) {
-    try {
-      const response = await fetch(url, {
-        mode: 'cors',
-        credentials: 'omit'
-      });
-
-      if (!response.ok) {
-        console.warn('Image HTTP error:', response.status, url);
-        continue;
-      }
-
-      const blob = await response.blob();
-
-      if (!blob.type.startsWith('image/') || !blob.size) {
-        console.warn('Invalid image response:', url);
-        continue;
-      }
-
-      return await blobAsDataURL(blob);
-
-    } catch (error) {
-      console.error('Image loading error:', url, error);
-    }
-  }
-
-  throw new Error(`Unable to load poster: ${original}`);
-}
  async function prepareExportPosters(){
-  const images = Array.from(
-    $('posterGrid').querySelectorAll('.poster-image img')
-  );
-  const originalSrcs = images.map(img => img.getAttribute('src'));
-  const dataURLs = new Array(images.length);
-  const fallback =
-    'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
-  let nextIndex = 0;
-  let failedCount = 0;
-  async function worker(){
-    while(nextIndex < images.length){
-      const i = nextIndex++;
-      try {
-        dataURLs[i] = await fetchPosterForCanvas(originalSrcs[i]);
-      } catch(error) {
-        dataURLs[i] = fallback;
-        failedCount++;
-        console.warn('Poster export failed:', originalSrcs[i]);
-      }
-    }
-  }
-  await Promise.all(
-    Array.from({length: Math.min(4, images.length)}, worker)
-  );
-  const restore = () => images.forEach((img, i) => {
-    img.src = originalSrcs[i];
-  });
-  await Promise.all(images.map(async(img, i) => {
-    img.src = dataURLs[i];
-    try {
-      await img.decode();
-    } catch(error) {
-      img.src = fallback;
-      failedCount++;
-    }
-  }));
-  return {restore, failedCount};
-}
+   const images=Array.from($('posterGrid').querySelectorAll('.poster-image img'));
+   const originalSrcs=images.map(img=>img.getAttribute('src'));
+   const dataURLs=new Array(images.length);
+   let nextIndex=0;
+   // Limit simultaneous image requests on phones and long rankings.
+   async function worker(){
+     while(nextIndex<images.length){
+       const i=nextIndex++;
+       dataURLs[i]=await fetchPosterForCanvas(originalSrcs[i]);
+     }
+   }
+   await Promise.all(Array.from({length:Math.min(4,images.length)},worker));
+   // Only alter the live images after every conversion succeeds.
+   const restore=()=>images.forEach((img,i)=>{img.src=originalSrcs[i]});
+   try{
+     await Promise.all(images.map(async(img,i)=>{
+       img.src=dataURLs[i];
+       try{await img.decode()}catch(e){throw new Error('Unable to decode a poster image')}
+     }));
+   }catch(error){restore();throw error;}
+   return restore;
+ }
  async function exportAsJPG(){
    const target=$('exportArea');
    if(typeof window.html2canvas!=='function'){
@@ -163,14 +118,7 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
    const btn=$('jpgBtn');btn.disabled=true;btn.textContent=msg('Rendering…','이미지 생성 중…');
    let restorePosters=()=>{};
    try{
-     const posterResult = await prepareExportPosters();
-     restorePosters = posterResult.restore;
-     if (posterResult.failedCount > 0) {
-       toast(msg(
-         `${posterResult.failedCount} posters could not be loaded. Exporting the remaining images.`,
-         `${posterResult.failedCount}개 포스터를 불러오지 못했습니다. 나머지 이미지로 저장합니다.`
-       ));
-     }
+     restorePosters=await prepareExportPosters();
      // Use a stable desktop-sized export in the cloned document, regardless of phone width.
      // Keep canvas within practical iOS Safari memory limits.
      await Promise.all(Array.from(target.querySelectorAll('img')).map(img=>{
@@ -207,7 +155,7 @@ $('searchForm').addEventListener('submit',async e=>{e.preventDefault();const que
        toast(msg('JPG downloaded.','JPG 파일을 저장했어요.'));
      }
    }catch(err){console.error('JPG export failed',err);
-     toast(msg('Some posters could not be loaded, but the JPG will be created with the remaining images.','일부 포스터를 불러오지 못했지만, 나머지 이미지로 JPG를 생성합니다.'));
+     toast(msg('JPG export failed because some posters could not be loaded for capture. Please try again.','일부 포스터를 JPG용으로 불러오지 못해 저장이 중단됐어요. 다시 시도해 주세요.'));
    }finally{restorePosters();btn.disabled=false;btn.textContent=msg('🖼 Export JPG','🖼 JPG 저장');}
  }
  $('jpgBtn').addEventListener('click',exportAsJPG);
