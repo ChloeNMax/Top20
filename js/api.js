@@ -1,5 +1,5 @@
 /* Search providers normalize results to {id,title,image,kind,detail}. */
-window.Top20API = (() => {
+window.RankingAPI = (() => {
   async function getJson(url, signal) {
     let r;
     try { r = await fetch(url, {signal, headers:{Accept:'application/json'}}); }
